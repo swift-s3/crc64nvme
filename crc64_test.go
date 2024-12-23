@@ -17,9 +17,20 @@ import (
 var crc64Table = crc64.MakeTable(NVME)
 
 func TestChecksum(t *testing.T) {
+	if hasAsm {
+		testChecksum(t, "asm-")
+		hasAsm = false
+		testChecksum(t, "")
+		hasAsm = true
+	} else {
+		testChecksum(t, "")
+	}
+}
+
+func testChecksum(t *testing.T, asm string) {
 	sizes := []int{0, 1, 3, 7, 8, 9, 15, 17, 127, 128, 129, 255, 256, 257, 1e3, 1e4, 1e5, 1e6}
 	for _, size := range sizes {
-		t.Run(fmt.Sprintf("size=%d", size), func(t *testing.T) {
+		t.Run(fmt.Sprintf("%ssize=%d", asm, size), func(t *testing.T) {
 			rng := rand.New(rand.NewSource(int64(size)))
 			data := make([]byte, size)
 			rng.Read(data)
@@ -33,9 +44,20 @@ func TestChecksum(t *testing.T) {
 }
 
 func TestHasher(t *testing.T) {
+	if hasAsm {
+		testHasher(t, "asm-")
+		hasAsm = false
+		testHasher(t, "")
+		hasAsm = true
+	} else {
+		testHasher(t, "")
+	}
+}
+
+func testHasher(t *testing.T, asm string) {
 	sizes := []int{0, 1, 3, 7, 8, 9, 15, 17, 127, 128, 129, 255, 256, 257, 1e3, 1e4, 1e5, 1e6}
 	for _, size := range sizes {
-		t.Run(fmt.Sprintf("size=%d", size), func(t *testing.T) {
+		t.Run(fmt.Sprintf("%ssize=%d", asm, size), func(t *testing.T) {
 			rng := rand.New(rand.NewSource(int64(size)))
 			data := make([]byte, size)
 			rng.Read(data)

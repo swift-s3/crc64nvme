@@ -2,4 +2,6 @@
 
 package crc64nvme
 
-const hasAsm = true
+var hasAsm = false
+
+func updateAsm(crc uint64, p []byte) (checksum uint64)

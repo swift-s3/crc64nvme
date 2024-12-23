@@ -121,6 +121,10 @@ func (d *digest) UnmarshalBinary(b []byte) error {
 }
 
 func update(crc uint64, p []byte) uint64 {
+	if hasAsm {
+		return updateAsm(crc, p)
+	}
+
 	buildSlicing8TablesOnce()
 	crc = ^crc
 	// table comparison is somewhat expensive, so avoid it for small sizes

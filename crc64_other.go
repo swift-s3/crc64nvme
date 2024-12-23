@@ -2,4 +2,4 @@
 
 package crc64nvme
 
-const hasAsm = false
+var hasAsm = false
