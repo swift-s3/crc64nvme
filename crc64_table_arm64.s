@@ -1,3 +1,7 @@
+// Copyright (c) 2025 Minio Inc. All rights reserved.
+// Use of this source code is governed by a license that can be
+// found in the LICENSE file.
+
 #include "textflag.h"
 
 DATA ·table0+0x000(SB)/8, $0x0000000000000000
