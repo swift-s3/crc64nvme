@@ -11,6 +11,8 @@ import (
 	"hash/crc64"
 	"io"
 	"math/rand"
+	"runtime"
+	"sync/atomic"
 	"testing"
 )
 
@@ -125,4 +127,40 @@ func bench(b *testing.B, h hash.Hash64, size int64) {
 		h.Write(data)
 		h.Sum(in)
 	}
+}
+
+func benchmarkParallel(b *testing.B, size int) {
+	hashes := make([]hash.Hash64, runtime.GOMAXPROCS(0))
+	for i := range hashes {
+		hashes[i] = New()
+	}
+
+	rng := rand.New(rand.NewSource(0xabadc0cac01a))
+	data := make([][]byte, runtime.GOMAXPROCS(0))
+	for i := range data {
+		data[i] = make([]byte, size)
+		rng.Read(data[i])
+	}
+
+	b.SetBytes(int64(size))
+	b.ResetTimer()
+
+	counter := uint64(0)
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			index := atomic.AddUint64(&counter, 1)
+			index = index % uint64(len(data))
+			hashes[index].Reset()
+			hashes[index].Write(data[index])
+			in := make([]byte, 0, hashes[index].Size())
+			hashes[index].Sum(in)
+		}
+	})
+}
+
+func BenchmarkParallel(b *testing.B) {
+	// go test -v -run=XYZ -cpu=1,2,3,4 -bench=Parallel
+	b.Run("50M", func(b *testing.B) {
+		benchmarkParallel(b, 50*1024*1024)
+	})
 }
