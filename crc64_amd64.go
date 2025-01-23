@@ -6,6 +6,10 @@
 
 package crc64nvme
 
-var hasAsm = false
+import (
+	"github.com/klauspost/cpuid/v2"
+)
+
+var hasAsm = cpuid.CPU.Supports(cpuid.SSE2, cpuid.CLMUL, cpuid.SSE4)
 
 func updateAsm(crc uint64, p []byte) (checksum uint64)

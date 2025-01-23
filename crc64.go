@@ -1,6 +1,6 @@
-// Copyright 2009 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// Copyright (c) 2025 Minio Inc. All rights reserved.
+// Use of this source code is governed by a license that can be
+// found in the LICENSE file.
 
 // Package crc64nvme implements the 64-bit cyclic redundancy check with NVME polynomial.
 package crc64nvme
@@ -10,8 +10,6 @@ import (
 	"errors"
 	"hash"
 	"sync"
-
-	"github.com/klauspost/cpuid/v2"
 )
 
 const (
@@ -25,9 +23,6 @@ const (
 var (
 	// precalculated table.
 	nvmeTable = makeTable(NVME)
-
-	// detect if amd64 and CLMUL is available.
-	canCLMUL = cpuid.CPU.Supports(cpuid.SSE2, cpuid.CLMUL, cpuid.SSE4)
 )
 
 // table is a 256-word table representing the polynomial for efficient processing.
