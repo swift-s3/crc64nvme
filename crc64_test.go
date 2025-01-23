@@ -73,6 +73,18 @@ func testHasher(t *testing.T, asm string) {
 }
 
 func BenchmarkCrc64(b *testing.B) {
+	b.Run("64MB", func(b *testing.B) {
+		bench(b, New(), 64<<20)
+	})
+	b.Run("stdlib-64MB", func(b *testing.B) {
+		bench(b, crc64.New(crc64Table), 64<<20)
+	})
+	b.Run("4MB", func(b *testing.B) {
+		bench(b, New(), 4<<20)
+	})
+	b.Run("stdlib-4MB", func(b *testing.B) {
+		bench(b, crc64.New(crc64Table), 4<<20)
+	})
 	b.Run("1MB", func(b *testing.B) {
 		bench(b, New(), 1<<20)
 	})
