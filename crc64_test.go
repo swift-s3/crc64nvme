@@ -57,7 +57,7 @@ func TestHasher(t *testing.T) {
 }
 
 func testHasher(t *testing.T, asm string) {
-	sizes := []int{0, 1, 3, 7, 8, 9, 15, 17, 127, 128, 129, 255, 256, 257, 1e3, 1e4, 1e5, 1e6}
+	sizes := []int{0, 1, 3, 7, 8, 9, 15, 17, 127, 128, 129, 255, 256, 257, 383, 384, 385, 1e3, 1e4, 1e5, 1e6}
 	for _, size := range sizes {
 		t.Run(fmt.Sprintf("%ssize=%d", asm, size), func(t *testing.T) {
 			rng := rand.New(rand.NewSource(int64(size)))
