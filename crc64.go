@@ -10,6 +10,7 @@ import (
 	"errors"
 	"hash"
 	"sync"
+	"unsafe"
 )
 
 const (
@@ -116,8 +117,16 @@ func (d *digest) UnmarshalBinary(b []byte) error {
 }
 
 func update(crc uint64, p []byte) uint64 {
-	if hasAsm {
-		return updateAsm(crc, p)
+	if hasAsm && len(p) > 127 {
+		ptr := unsafe.Pointer(&p[0])
+		if align := (uintptr(ptr)+15)&^0xf - uintptr(ptr); align > 0 {
+			// Align to 16-byte boundary.
+			crc = update(crc, p[:align])
+			p = p[align:]
+		}
+		runs := len(p) / 128
+		crc = updateAsm(crc, p[:128*runs])
+		return update(crc, p[128*runs:])
 	}
 
 	buildSlicing8TablesOnce()

@@ -13,4 +13,3 @@ import (
 var hasAsm = cpuid.CPU.Supports(cpuid.ASIMD) && cpuid.CPU.Supports(cpuid.PMULL)
 
 func updateAsm(crc uint64, p []byte) (checksum uint64)
-func updateAsmSingle()
