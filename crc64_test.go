@@ -74,6 +74,25 @@ func testHasher(t *testing.T, asm string) {
 	}
 }
 
+func TestLoopAlignment(t *testing.T) {
+	for l := 128; l <= 128*10; l++ {
+		dataBlock := make([]byte, l)
+		for i := range dataBlock {
+			dataBlock[i] = byte(i + 1)
+		}
+
+		// make sure we don't start on an aligned boundary
+		offset := rand.Intn(16)
+		data := dataBlock[offset:]
+
+		ref := crc64.Checksum(data, crc64Table)
+		got := update(0, data)
+		if got != ref {
+			t.Errorf("got 0x%x, want 0x%x", got, ref)
+		}
+	}
+}
+
 func BenchmarkCrc64(b *testing.B) {
 	b.Run("64MB", func(b *testing.B) {
 		bench(b, New(), 64<<20)
