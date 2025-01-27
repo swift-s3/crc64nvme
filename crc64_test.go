@@ -178,7 +178,7 @@ func benchmarkParallel(b *testing.B, size int) {
 }
 
 func BenchmarkParallel(b *testing.B) {
-	// go test -v -run=XYZ -cpu=1,2,3,4 -bench=Parallel
+	// go test -cpu=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16 -bench=Parallel
 	b.Run("50M", func(b *testing.B) {
 		benchmarkParallel(b, 50*1024*1024)
 	})
